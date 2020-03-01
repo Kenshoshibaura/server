@@ -6,7 +6,7 @@
   <body onLoad="updateLux('/lux','data')">
     <span id="Realtime" class="time">00/00(0) 00:00:00</span>
     <span class="Latest">
-      <span id="hidden">現在の情報：<span id = "data">2000/04/01 00:00:00,0</span></span><br>
+      <span class="hidden">現在の情報：<span id = "data">2000/04/01 00:00:00,0</span></span><br>
       現在の照度：<span id = "bright">0</span>
       <input type="button" value="手動更新" class="reload" onclick="manual()">
       <input type="button" value="自動更新" class="Auto_reload" onclick="Auto_reload()"><br>
@@ -19,7 +19,7 @@
           <th style="width:1000px">計測日時</th>
           <th style="width:200px">照度</th>
         </tr></thead>
-        <tbody id="body"><tr id="hidden2">
+        <tbody id="body"><tr class="hidden">
           <td>2000/04/01 00:00:00</td>
           <td>000</td>
         </tr></tbody>
@@ -28,11 +28,27 @@
   </body>
 
   <script>
+
+    var Auto=0;
     function manual(){
       updateLux('/lux','data');
       adddata();
       banner("手動更新","手動で更新しました");
     }
+    function auto(){
+      if(Auto==0){
+        updateLux('/lux','data');
+        adddata();
+      }
+    }
+    function Auto_reload(){
+      if(Auto==0){
+        Auto=1;
+      }else{
+        Auto=0;
+      }
+    }
+    setInterval("auto()",5000);
 
     const updateLux = async(url,element) => {
       const sensorData = await fetch(url)
@@ -40,30 +56,30 @@
       const target = document.getElementById(element)
       target.innerHTML = `${sensorData}`
     }
-    var Auto=0;
-    setInterval("if(Auto==0){updateLux('/lux','data');adddata();}",5000);
-/*    setInterval("updateLux('/lux','data')",5000);
-    setInterval("adddata()",5000);*/
-    function Auto_reload(){
-      if(Auto==0){Auto=1;}else{Auto=0;}
-    }
 
     var bright_list=[];
 
     function adddata(){
       var data=document.getElementById('data');
-      /*var date="2020/02/29 15:00:00"/**/
-      /*var illumination=Math.floor(Math.random()*10);/**/
-      /*data.innerHTML=date+","+illumination;/**/
-
       var table=document.getElementById('History');
-      var row=table.insertRow(1);
-      var cell1=row.insertCell(-1);
-      var cell2=row.insertCell(-1);
-
       var bright=document.getElementById('bright');
       var max=document.getElementById('max');
       var average=document.getElementById('average');
+
+      var nowTime=new Date();
+      var nowHour=set2fig(nowTime.getHours());
+      var nowMin=set2fig(nowTime.getMinutes());
+      var nowSec=set2fig(nowTime.getSeconds());
+      var nowMonth=set2fig(nowTime.getMonth()+1);
+      var nowDate=set2fig(nowTime.getDate());
+      var Realtime="2020/"+nowMonth+"/"+nowDate+" "+nowHour+":"+nowMin+":"+nowSec;
+
+      var illumination=Math.floor(Math.random()*10);/**/
+      data.innerHTML=Realtime+","+illumination;/**/
+
+      var row=table.insertRow(1);
+      var cell1=row.insertCell(-1);
+      var cell2=row.insertCell(-1);
 
       var before_data=data.innerHTML;
       var after_data=before_data.split(',');
@@ -85,7 +101,6 @@
 
       cell1.innerHTML=now_date;
       cell2.innerHTML=now_bright;
-
       bright.innerHTML=now_bright;
       max.innerHTML=after_max;
       average.innerHTML=now_average.toPrecision(3);
@@ -130,7 +145,7 @@
       top:15%;
       left:40%;
     }
-    #hidden{display:none;}
+    .hidden{display:none;}
     #hidden2{display:none;}
 
     .reload,.Auto_reload{
@@ -151,8 +166,8 @@
       height:20px;
       width:80px;
     }
-    .reload{background:#ffdd1d; right:150px;}
-    .Auto_reload{background:#ffdd1d; right:60px;}
+    .reload{background:#ffdd1d; right:120px;}
+    .Auto_reload{background:#ffdd1d; right:30px;}
 
 
   </style>
