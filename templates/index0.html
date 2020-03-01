@@ -6,8 +6,11 @@
   <body onLoad="updateLux('/lux','data')">
     <span id="Realtime" class="time">00/00(0) 00:00:00</span>
     <span class="Latest">
-      現在の状況：<span id = "data">test</span>
-      <input type="button" value="手動更新" onclick="updateLux('/lux','data')">
+      <span id="hidden">現在の情報：<span id = "data">2000/04/01 00:00:00,0</span></span><br>
+      現在の照度：<span id = "bright">0</span>
+      <input type="button" value="手動更新" class="reload" onclick="updateLux('/lux','data')"><br>
+      照度最高値：<span id = "max">0</span><br>
+      照度平均値：<span id = "average">0</span>
     </span>
     <span class="area">
       <table id="History" class="History" border="1">
@@ -47,6 +50,34 @@
 
     }
     setInterval("adddata()",5000);
+    setInterval("reflection()",5000);
+
+    function reflection(){
+      var data=document.getElementById(' data');
+      var bright=document.getElementById('bright');
+      var max=document.getElementById('max');
+      var average=document.getElementById('average');
+
+      var before_data=data.innerHTML;
+      var after_data=before_data(',');
+      var now_bright=after_data[2];
+
+      var before_max=max.innerHTML;
+      if(now_bright>before_max){
+        var after_max=now_bright;
+      }else{
+        var after_max=before_max;
+      }
+
+      var a1=Math.floor(Math.random()*10);
+      var a2=Math.floor(Math.random()*10);
+      var a3=Math.floor(Math.random()*10);
+
+      bright.innerHTML=now_bright;
+      max.innerHTML=after_max;
+      average.innerHTML=a3;
+
+    }
 
 
   </script>
@@ -84,10 +115,31 @@
 
     .Latest{
       position:fixed;
-      top:15%;
-      left:15%;
+      top:10%;
+      left:40%;
     }
+    #hidden{display:none;}
 
+    .reload{
+      position:fixed;
+      font-size:60%;
+      top:15%;
+      right:150px;
+      z-index:5;
+      display:inline-block;
+      text-decoration:none;
+      border-bottom:solid 4px #627295;
+      color:#000;
+      font-weight:600;
+      text-align:center;
+      vertical-align:middle;
+      text-shadow:1px 1px 0 #fff,-1px 1px 0 #fff,1px -1px 0 #fff,-1px -1px 0 #fff;
+      border-radius:5px;
+      padding:1px;
+      height:20px;
+      width:80px;
+    }
+    .reload{background:#ffdd1d;}
 
 
   </style>
