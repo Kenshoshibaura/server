@@ -5,7 +5,7 @@ port_num = 17086
 
 @app.route('/', methods=['GET'])
 def get_html():
-    return render_template('./index.html')
+    return render_template('./index0.html')
 
 @app.route('/lux', methods=['POST'])
 def update_lux():
