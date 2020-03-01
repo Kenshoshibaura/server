@@ -9,6 +9,16 @@
       <div id = "data">test</div>
       <input type="button" value="手動更新" onclick="updateLux('/lux','data')">
     </center>
+    <table id="History">
+      <thead><tr>
+        <th style="width:250px">計測日時</th>
+        <th style="width:200px">照度</th>
+      </tr></thead>
+      <tbody id="body"><tr>
+        <td>2020/02/27 13:00:00</td>
+        <td>200</td>
+      </tr></tbody>
+    </table>
   </body>
 
   <script>
@@ -19,7 +29,44 @@
       target.innerHTML = `<h2>${sensorData}</h2>`
     }
     setInterval("updateLux('/lux','data')",5000);
+
+    function adddata(order_id){
+      var orderNo = "No"+order_id;
+      var table=document.getElementById('accept');
+      var row_len=table.rows.length;
+      row_len--;
+
+      var row=table.insertRow(row_len);
+      var cell1=row.insertCell(-1);
+      var cell2=row.insertCell(-1);
+
+      var cmp='<button value="完了" class="cmp" onclick="completeRow(this)"/>完了</button>';
+      var del='<button value="削除" class="delete" onclick="deleteRow(this)"/>削除</button>';
+
+      var id=set3fig(orderData[orderNo].id);
+      var time=Math.floor(Math.random()*10);
+
+      cell1.innerHTML=id;
+      cell2.innerHTML=time+"分前";
+      cell3.innerHTML=menu1;
+      cell4.innerHTML=menu2;
+      cell5.innerHTML=menu3;
+
+      cell7.innerHTML=menu1+menu2+menu3;
+      cell8.innerHTML=cmp;
+      cell9.innerHTML=del;
+
+    }
+
+
   </script>
+  <style>
+    #History{
+      position:fixed;
+      bottom:10%;
+    }
+
+  </style>
 
   <script>
     /*ここからは編集不可*/
