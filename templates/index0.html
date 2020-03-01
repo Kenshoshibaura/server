@@ -36,31 +36,24 @@
     setInterval("updateLux('/lux','data')",5000);
 
     function adddata(){
-      var table=document.getElementById('History');
+      var data=document.getElementById('data');
+      var date="2020/02/29 15:00:00"
+      var illumination=Math.floor(Math.random()*10);
+      data.innerHTML=date+","+illumination;
 
+      var table=document.getElementById('History');
       var row=table.insertRow(1);
       var cell1=row.insertCell(-1);
       var cell2=row.insertCell(-1);
 
-      var date="2020/02/29 15:00:00"
-      var illumination=Math.floor(Math.random()*10);
-
-      cell1.innerHTML=date;
-      cell2.innerHTML=illumination;
-
-    }
-    setInterval("adddata()",5000);
-    setInterval("reflection()",5000);
-
-    function reflection(){
-      var data=document.getElementById(' data');
       var bright=document.getElementById('bright');
       var max=document.getElementById('max');
       var average=document.getElementById('average');
 
       var before_data=data.innerHTML;
-      var after_data=before_data(',');
-      var now_bright=after_data[2];
+      var after_data=before_data.split(',');
+      var now_date=after_data[0];
+      var now_bright=after_data[1];
 
       var before_max=max.innerHTML;
       if(now_bright>before_max){
@@ -69,16 +62,17 @@
         var after_max=before_max;
       }
 
-      var a1=Math.floor(Math.random()*10);
-      var a2=Math.floor(Math.random()*10);
       var a3=Math.floor(Math.random()*10);
+
+      cell1.innerHTML=now_date;
+      cell2.innerHTML=now_bright;
 
       bright.innerHTML=now_bright;
       max.innerHTML=after_max;
       average.innerHTML=a3;
 
     }
-
+    setInterval("adddata()",5000);
 
   </script>
   <style>
