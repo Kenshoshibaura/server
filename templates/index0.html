@@ -8,7 +8,8 @@
     <span class="Latest">
       <span id="hidden">現在の情報：<span id = "data">2000/04/01 00:00:00,0</span></span><br>
       現在の照度：<span id = "bright">0</span>
-      <input type="button" value="手動更新" class="reload" onclick="updateLux('/lux','data')"><br>
+      <input type="button" value="手動更新" class="reload" onclick="manual()">
+      <input type="button" value="自動更新" class="Auto_reload" onclick="Auto_reload()"><br>
       照度最高値：<span id = "max">0</span><br>
       照度平均値：<span id = "average">0</span>
     </span>
@@ -18,7 +19,7 @@
           <th style="width:1000px">計測日時</th>
           <th style="width:200px">照度</th>
         </tr></thead>
-        <tbody id="body"><tr>
+        <tbody id="body"><tr id="hidden2">
           <td>2000/04/01 00:00:00</td>
           <td>000</td>
         </tr></tbody>
@@ -27,21 +28,33 @@
   </body>
 
   <script>
+    function manual(){
+      updateLux('/lux','data');
+      adddata();
+      banner("手動更新","手動で更新しました");
+    }
+
     const updateLux = async(url,element) => {
       const sensorData = await fetch(url)
       .then(response => response.text())
       const target = document.getElementById(element)
       target.innerHTML = `${sensorData}`
     }
-    setInterval("updateLux('/lux','data')",5000);
+    var Auto=0;
+    setInterval("if(Auto==0){updateLux('/lux','data');adddata();}",5000);
+/*    setInterval("updateLux('/lux','data')",5000);
+    setInterval("adddata()",5000);*/
+    function Auto_reload(){
+      if(Auto==0){Auto=1;}else{Auto=0;}
+    }
 
     var bright_list=[];
 
     function adddata(){
       var data=document.getElementById('data');
-      var date="2020/02/29 15:00:00"
-      var illumination=Math.floor(Math.random()*10);
-      data.innerHTML=date+","+illumination;
+      /*var date="2020/02/29 15:00:00"/**/
+      /*var illumination=Math.floor(Math.random()*10);/**/
+      /*data.innerHTML=date+","+illumination;/**/
 
       var table=document.getElementById('History');
       var row=table.insertRow(1);
@@ -78,7 +91,6 @@
       average.innerHTML=now_average.toPrecision(3);
 
     }
-    setInterval("adddata()",5000);
 
   </script>
   <style>
@@ -110,21 +122,21 @@
     .area{
       position:fixed;
       left:10%;
-      bottom:15%;
+      bottom:10%;
     }
 
     .Latest{
       position:fixed;
-      top:10%;
+      top:15%;
       left:40%;
     }
     #hidden{display:none;}
+    #hidden2{display:none;}
 
-    .reload{
+    .reload,.Auto_reload{
       position:fixed;
       font-size:60%;
-      top:15%;
-      right:150px;
+      top:20%;
       z-index:5;
       display:inline-block;
       text-decoration:none;
@@ -139,7 +151,8 @@
       height:20px;
       width:80px;
     }
-    .reload{background:#ffdd1d;}
+    .reload{background:#ffdd1d; right:150px;}
+    .Auto_reload{background:#ffdd1d; right:60px;}
 
 
   </style>
@@ -276,6 +289,107 @@
       left:40px;
       z-index:5;
     }
+
+    /*ここからアラートとバナーのcss*/
+    /*ここからバナー*/
+    .banner{
+      position : fixed;
+      top : -700px;
+      left : 25vw;
+      width: 50vw;
+      background: rgba(55,55,55,0.9);
+      text-shadow:none;
+      color:white;
+      text-align:center;
+      z-index:29;
+      border-radius : 20px;
+      border : solid 3px white;
+      animation: animation-banner 5s;
+    }
+    .banner p{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    @keyframes animation-banner {
+      0%{top:-700px;display:block;}
+      6%{top:20px;}
+      9%{top:0px;}
+      13%{top:12px;}
+      19%{top:5px;}
+      90%{top:5px;}
+      92%{top:7px;}
+      100%{top:-700px;}
+    }
+    @keyframes animation-banner-up {
+      0%{top:0px;}
+      100%{top:-700px;}
+    }
+
+    /*ここからアラート*/
+      .bgAlert{
+        position:fixed;
+        top:0px;
+        right:0px;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.5);
+        animation:animation-background 0.3s;
+        z-index:29;
+      }
+      .alert{
+        background:rgba(55,55,55,0.9);
+        border-radius:30px;
+        color: white;
+        padding: 20px;
+        position :fixed;
+        top: 50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        text-shadow: none;
+        text-align: center;
+        overflow: hidden;
+        border: solid 3px white;
+        animation: animation-popup 0.3s;
+      }
+      .alert p{
+        font-size:120%;
+      }
+      .alert button{
+        color: white;
+        background: rgba(200,200,200,0.5);
+        width:calc(50% - 10px);
+        border-radius: 30px;
+        margin: 5px 5px;
+        outline-color: white;
+        padding:10px;
+        border: 2px solid white;
+      }
+      .alert button:active {
+        border-color: #AAA;
+        color:#AAA;
+        background: rgba(0,0,0,0.7);
+      }
+      .alert div{
+        font-size:70%;
+        text-align: right;
+      }
+
+      @keyframes animation-background{
+        0%{display:  none; background: rgba(0,0,0,0);}
+        1%{display:  block;background: rgba(0,0,0,0);}
+        100%{display:block;background: rgba(0,0,0,0.5);}
+      }
+      @keyframes animation-popup{
+        0%{display:none  ;padding-top: 0px;padding-bottom :0px;height:0px;}
+        20%{display:block;padding : 0px;height:0px;}
+        25%{display:block;padding : 0px 60px;height:0px;}
+        40%{display:block;padding : 10px 20px;height:0px;}
+        90%{display:block;padding-top: 25px;padding-bottom :25px;height:auto;}
+        100%{display:block;padding-top: 20px;padding-bottom :20px;height:auto;}
+      }
+      /*ここまでアラート*/
+
 
   </style>
 
