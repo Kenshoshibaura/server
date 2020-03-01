@@ -35,6 +35,8 @@
     }
     setInterval("updateLux('/lux','data')",5000);
 
+    var bright_list=[];
+
     function adddata(){
       var data=document.getElementById('data');
       var date="2020/02/29 15:00:00"
@@ -55,12 +57,16 @@
       var now_date=after_data[0];
       var now_bright=after_data[1];
 
+      bright_list.push(now_bright);
+      let sum = 0;
+      bright_list.forEach(function(v){
+        sum += parseInt(v);
+      });
+      var now_average=( (sum) / parseInt(bright_list.length) );
+
       var before_max=max.innerHTML;
-      if(now_bright>before_max){
-        var after_max=now_bright;
-      }else{
-        var after_max=before_max;
-      }
+      if(now_bright>before_max){ var after_max=now_bright;
+      }else{ var after_max=before_max;}
 
       var a3=Math.floor(Math.random()*10);
 
@@ -69,7 +75,7 @@
 
       bright.innerHTML=now_bright;
       max.innerHTML=after_max;
-      average.innerHTML=a3;
+      average.innerHTML=now_average.toPrecision(3);
 
     }
     setInterval("adddata()",5000);
@@ -112,7 +118,7 @@
       top:10%;
       left:40%;
     }
-    /*#hidden{display:none;}*/
+    #hidden{display:none;}
 
     .reload{
       position:fixed;
