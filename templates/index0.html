@@ -18,6 +18,7 @@
       const target = document.getElementById(element)
       target.innerHTML = `<h2>${sensorData}</h2>`
     }
+    setInterval("updateLux('/lux','data')",5000);
   </script>
 
   <script>
