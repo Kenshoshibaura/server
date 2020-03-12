@@ -28,7 +28,9 @@ def get_lux():
             lux = row
     except Exception as e:
         print(e)
-        return # -*- coding: utf-8 -*-
+        print("ERROR lux")
+        lux = 0
+        #return # -*- coding: utf-8 -*-
     finally:
         f.close()
         return lux
