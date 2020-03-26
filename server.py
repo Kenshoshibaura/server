@@ -22,14 +22,15 @@ def update_lux():
         f.close()
 @app.route('/lux',methods=['GET'])
 def get_lux():
+    lux = "0,0"
     try:
         f = open(file_path,'r')
         for row in f:
             lux = row
     except Exception as e:
-        print(e)
+        #print(e)
         print("ERROR lux")
-        lux = 0
+        lux = "0,0"
         #return # -*- coding: utf-8 -*-
     finally:
         f.close()
